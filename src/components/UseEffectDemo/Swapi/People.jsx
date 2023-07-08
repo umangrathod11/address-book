@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 export const People = () => {
-  const [peopleId, setPeopleId] = React.useState(0);
+  const [peopleId, setPeopleId] = React.useState(5);
 
   return (
     <div className="formContainer">
