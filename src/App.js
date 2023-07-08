@@ -4,6 +4,7 @@ import "./styles.css";
 import { getInitialAppState, reducerFn } from './context/reducer';
 import { CommunityContext } from './context/context';
 import { getCommunityActions } from './context/communityActions';
+import Timer from './components/Timer';
 
 export default function App() {
   const [myState, dispatch] = React.useReducer(reducerFn, getInitialAppState());
@@ -18,6 +19,7 @@ export default function App() {
       <CommunityContext.Provider value = {{ state: myState, communityActions }}>
           <Community />
       </CommunityContext.Provider>
+      <Timer />
     </div>
   );
 }
