@@ -125,7 +125,7 @@ PeopleDetails.propTypes = {
     https://www.w3schools.com/howto/howto_css_loader.asp 
 */
 const Loader = ({ text }) => {
-    return (<div>
+    return (<div className="loaderContainer">
         <div className="loader"></div>
         {text ? <div>{text}</div> : null }
     </div>);
