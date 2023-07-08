@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 
 export const Timer = () => {
     const [time, setTime] = useState(new Date().getTime());
+    /* In the following effect, we are using the state variable,
+        but we are not defining it in the dependency array. It's wrong practice,
+        The function inside useEffect will always get the old value of time.
+
+        Add time in the dependency array and see the difference in the log and output
+    */
     useEffect(() => {
         setInterval(() => {
-            setTime(oldTime => {
-                console.log( new Date(oldTime).toString() , ' --> ',  new Date(oldTime + 1000).toString() );
-                return oldTime + 1000;
-            });
+            console.log( new Date(time).toString() , ' --> ',  new Date(time + 1000).toString());
+            setTime(time + 1000);
         }, 3000);
     }, []);
     
