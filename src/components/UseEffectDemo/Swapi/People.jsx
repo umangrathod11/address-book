@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 export const People = () => {
-  const [peopleId, setPeopleId] = React.useState(5);
+  const [peopleId, setPeopleId] = React.useState(0);
 
   return (
     <div className="formContainer">
@@ -52,13 +52,14 @@ const getAPICallSuccessState = (data) => ({
 const PeopleDetails = ({ id }) => {
   const [reqState, setRequestState] = React.useState(getAPICallInitialState());
 
+  const prevIdRef = React.useRef(null);
   React.useEffect(() => {
     if (!id) {
       setRequestState(getAPICallInitialState());
       return;
     }
     console.log('new id in the effect ' + id);
-    setRequestState(getAPICallLoadingState());
+    prevIdRef.current !== id && setRequestState(getAPICallLoadingState());
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -73,7 +74,7 @@ const PeopleDetails = ({ id }) => {
       .then(res => {
         return res;
       })
-      .then(res => setRequestState(getAPICallSuccessState(res)))
+      .then(res => prevIdRef.current !== id && setRequestState(getAPICallSuccessState(res)))
       .catch(err => {
         let errMsg = '';
         if (typeof err === 'string') {
@@ -83,11 +84,12 @@ const PeopleDetails = ({ id }) => {
         } else {
             errMsg = 'Something went wrong !!'
         }
-        setRequestState(getAPICallErrorState(errMsg))
+        prevIdRef.current !== id && setRequestState(getAPICallErrorState(errMsg))
       });
 
       return () => {
         console.log('Aborting request for id ' + id);
+        prevIdRef.current = id;
         // if the fetch request is already finished, then following call will not make any difference
         controller.abort();
       }
