@@ -5,6 +5,7 @@ import { getInitialAppState, reducerFn } from './context/reducer';
 import { CommunityContext } from './context/context';
 import { getCommunityActions } from './context/communityActions';
 import Timer from './components/Timer';
+import { People } from './components/UseEffectDemo';
 
 export default function App() {
   const [myState, dispatch] = React.useReducer(reducerFn, getInitialAppState());
@@ -20,6 +21,7 @@ export default function App() {
           <Community />
       </CommunityContext.Provider>
       <Timer />
+      <People />
     </div>
   );
 }
