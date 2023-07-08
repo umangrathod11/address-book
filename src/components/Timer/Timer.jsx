@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 export const Timer = () => {
     const [time, setTime] = useState(new Date().getTime());
     useEffect(() => {
-        setTimeout(() => {
+        setInterval(() => {
             setTime(oldTime => {
                 console.log( new Date(oldTime).toString() , ' --> ',  new Date(oldTime + 1000).toString() );
                 return oldTime + 1000;
