@@ -57,12 +57,13 @@ const PeopleDetails = ({ id }) => {
       setRequestState(getAPICallInitialState());
       return;
     }
+    let isOldReq = false;
     console.log('new id in the effect ' + id);
-    setRequestState(getAPICallLoadingState());
+    !isOldReq && setRequestState(getAPICallLoadingState());
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch(`https://swapi.dev/api/people/${id}`, { signal })
+    fetch(`https://swapi.dev/api/people/${id}?time=${new Date().getTime()}`, { signal })
       .then(res => {
         if(res.status >= 400) {
             throw `Something went wrong. Error code ${res.status}`;
@@ -73,7 +74,7 @@ const PeopleDetails = ({ id }) => {
       .then(res => {
         return res;
       })
-      .then(res => setRequestState(getAPICallSuccessState(res)))
+      .then(res => !isOldReq && setRequestState(getAPICallSuccessState(res)))
       .catch(err => {
         let errMsg = '';
         if (typeof err === 'string') {
@@ -83,12 +84,13 @@ const PeopleDetails = ({ id }) => {
         } else {
             errMsg = 'Something went wrong !!'
         }
-        setRequestState(getAPICallErrorState(errMsg))
+        !isOldReq && setRequestState(getAPICallErrorState(errMsg))
       });
 
       return () => {
         console.log('Aborting request for id ' + id);
         // if the fetch request is already finished, then following call will not make any difference
+        isOldReq = true;
         controller.abort();
       }
 
