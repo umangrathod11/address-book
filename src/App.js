@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useId, useRef, useState } from 'react';
 import "./styles.css";
 
 export default function App() {
@@ -29,8 +29,23 @@ export const NamesForm = ({ randomNum, generateRandomNum }) => {
       <button onClick={addNames}>Add Btn 1</button>
 
       <br />
-      <h3>{names.join(", ")}</h3>
+      <br />
       <h3 onClick={generateRandomNum}>Random number : {randomNum}. Click here to generate new one.</h3>
+      <br />
+      <br />
+      <NamesList names={names} />
+    </div>
+  )
+}
+
+const NamesList = ({ names }) => {
+  const uniqId = useId();
+  return (
+    <div>
+      <h3>Names : {names.join(", ")}</h3>
+      <br />
+      <br />
+      <h3>Uniq id : {uniqId}</h3>
     </div>
   )
 }
