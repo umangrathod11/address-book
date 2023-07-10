@@ -2,9 +2,20 @@ import React, { useCallback, useRef, useState } from 'react';
 import "./styles.css";
 
 export default function App() {
+  const [randomNum, setRandomNum] = useState(0);
+  
+  return (
+    <div className="App">
+      <NamesForm randomNum={randomNum} generateRandomNum={() => setRandomNum(Math.random())} />
+    </div>
+  );
+}
+
+export const NamesForm = ({ randomNum, generateRandomNum }) => {
+
   const [names, setNames] = useState(['raj']);
   const nameRef = useRef();
-  const [randomNum, setRandomNum] = useState(0);
+
   const addNames = useCallback(() => {
     const newNames = [...names, nameRef.current.value];
     setNames(newNames);
@@ -12,24 +23,14 @@ export default function App() {
     nameRef.current.focus();
   }, [names]);
   
-
-  const addNames2 = useCallback(() => {
-    const newNames = [...names, nameRef.current.value];
-    setNames(newNames);
-    nameRef.current.value = '';
-    nameRef.current.focus();
-  }, []);
-  
   return (
-    <div className="App">
+    <div>
       <input id="name1" ref={nameRef} />
       <button onClick={addNames}>Add Btn 1</button>
-      &nbsp;&nbsp;
-      <button onClick={addNames2}>Add Btn 2</button>
 
       <br />
       <h3>{names.join(", ")}</h3>
-      <h3 onClick={(e) => setRandomNum(Math.random())}>Random number : {randomNum}</h3>
+      <h3 onClick={generateRandomNum}>Random number : {randomNum}. Click here to generate new one.</h3>
     </div>
-  );
+  )
 }
