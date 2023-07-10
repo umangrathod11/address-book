@@ -6,7 +6,7 @@ export default function App() {
   
   return (
     <div className="App">
-      <NamesForm randomNum={randomNum} generateRandomNum={() => setRandomNum(Math.random())} />
+      <NamesForm key={randomNum} randomNum={randomNum} generateRandomNum={() => setRandomNum(Math.random())} />
     </div>
   );
 }
