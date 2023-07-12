@@ -1,10 +1,12 @@
-import React from 'react';
-import Pr from 'prop-types';
-import { ACTION_TYPES, getInitialFormValues } from '../reducer';
-import { EDUCATION, INTEREST_CONTRIBUTION, TAB_IDS } from '../constants';
+import React, { useContext } from 'react';
+import { getInitialFormValues } from '../../../context/reducer';
+import { EDUCATION, INTEREST_CONTRIBUTION, TAB_IDS } from '../../../constants/general';
 import Button from '../../../components/Button';
+import { CommunityContext } from '../../../context/context';
 
-export const MemberForm = ({ dispatch }) => {
+export const MemberForm = () => {
+
+    const { communityActions } = useContext(CommunityContext);
 
     const [record, setRecord] = React.useState(getInitialFormValues());
     const {
@@ -26,16 +28,9 @@ export const MemberForm = ({ dispatch }) => {
                 return;
                 /* there are better ways to validate forms, this is just a work around */
             }
-        dispatch({
-            type: ACTION_TYPES.ADD_RECORD,
-            payload: record,
-        });
+        communityActions.addMember(record);
         alert('Record added successfully');
-        dispatch({
-            type: ACTION_TYPES.CHANGE_CURRENT_TAB,
-            payload: TAB_IDS.VIEW_MEMBERS,
-        });
-
+        communityActions.changeTab(TAB_IDS.VIEW_MEMBERS)
     }
 
     return (

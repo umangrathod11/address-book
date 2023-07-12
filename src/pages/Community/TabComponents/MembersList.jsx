@@ -1,11 +1,12 @@
-import React from 'react';
-import Pr from 'prop-types';
-import { EDU_TO_TEXT, INTEREST_TO_TEXT } from '../constants';
+import React, { useContext } from 'react';
+import { EDU_TO_TEXT, INTEREST_TO_TEXT } from '../../../constants/general';
 import { Button } from '../../../components/Button/button';
-import { ACTION_TYPES } from '../reducer';
+import { CommunityContext } from '../../../context/context';
 
-export const MembersList = ({ records, dispatch }) => {
+export const MembersList = () => {
+    const { state: { records }, communityActions } = useContext(CommunityContext);
 
+    console.log('records ', records);
     return (
         <div id="viewMembers">
             <table>
@@ -37,10 +38,7 @@ export const MembersList = ({ records, dispatch }) => {
                                 </td>
                                 <td>
                                     <Button variant="danger" onClick={(e) => {
-                                        dispatch({
-                                            type: ACTION_TYPES.DELETE_RECORD,
-                                            payload: id
-                                        });
+                                        communityActions.deleteMember(id);
                                     }}>Delete</Button>
                                 </td>
                             </tr>
