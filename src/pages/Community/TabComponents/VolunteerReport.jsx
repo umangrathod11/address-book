@@ -1,10 +1,11 @@
-import React from 'react';
-import Pr from 'prop-types';
-import { RecordPropType } from '../reducer';
-import { INTEREST_CONTRIBUTION, INTEREST_TO_TEXT } from '../constants';
+import React, { useContext } from 'react';
+import { INTEREST_CONTRIBUTION, INTEREST_TO_TEXT } from '../../../constants/general';
 import { getPersonNameLabel } from '../helper';
+import { CommunityContext } from '../../../context/context';
 
-export const VolunteerReport = ({ records }) => {
+export const VolunteerReport = () => {
+    const { state } = useContext(CommunityContext);
+    const { records } = state;
     const groupedData = {};
 
     INTEREST_CONTRIBUTION.map(obj => obj.value).forEach(interest => {
@@ -38,9 +39,6 @@ export const VolunteerReport = ({ records }) => {
             }
         </div>
     )
-    
 }
 
-VolunteerReport.propTypes = {
-    records: Pr.arrayOf(RecordPropType),
-};
+VolunteerReport.propTypes = {};

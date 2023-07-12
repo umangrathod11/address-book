@@ -1,9 +1,11 @@
-import React from 'react';
-import Pr from 'prop-types';
-import { RecordPropType } from '../reducer';
+import React, { useContext } from 'react';
 import { getPersonNameLabel } from '../helper';
+import { CommunityContext } from '../../../context/context';
 
-export const GeoGraphyReport = ({ records }) => {
+export const GeoGraphyReport = () => {
+    const { state } = useContext(CommunityContext);
+    const { records } = state;
+
     const groupedData = {};
     records.forEach((obj) => {
         groupedData[obj.city] = groupedData[obj.city] || [];
@@ -46,14 +48,6 @@ export const GeoGraphyReport = ({ records }) => {
             </tbody>
         </table>
     );
-
-    return (
-        <h2>This is Geography Report ..</h2>
-    );
-
-   
 }
 
-GeoGraphyReport.propTypes = {
-    records: Pr.arrayOf(RecordPropType),
-};
+GeoGraphyReport.propTypes = {};

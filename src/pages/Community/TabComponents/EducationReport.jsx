@@ -1,10 +1,12 @@
-import React from 'react';
-import { RecordPropType } from '../reducer';
-import Pr from 'prop-types';
-import { EDUCATION, EDU_TO_TEXT } from '../constants';
+import React, { useContext } from 'react';
+import { EDUCATION, EDU_TO_TEXT } from '../../../constants/general';
 import { getPersonNameLabel } from '../helper';
+import { CommunityContext } from '../../../context/context';
 
-export const EducationReport = ({ records }) => {
+export const EducationReport = () => {
+    const { state } = useContext(CommunityContext);
+    const { records } = state;
+
     const groupedData = {};
     
     EDUCATION.map(obj => obj.value).forEach((level) => groupedData[level] = []);
@@ -54,6 +56,4 @@ export const EducationReport = ({ records }) => {
    
 }
 
-EducationReport.propTypes = {
-    records: Pr.arrayOf(RecordPropType),
-};
+EducationReport.propTypes = {};

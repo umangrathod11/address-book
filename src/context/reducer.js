@@ -1,4 +1,4 @@
-import { EDUCATION, INTEREST_CONTRIBUTION, TAB_IDS } from "./constants";
+import { EDUCATION, INTEREST_CONTRIBUTION, TAB_IDS } from "../constants/general";
 import Pr from 'prop-types';
 
 export const getInitialFormValues = () => ({
