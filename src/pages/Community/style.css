@@ -10,15 +10,14 @@
 }
 
 
-#CommunityContainer .tabItems a {
+#CommunityContainer .tabItems .tabItem {
     border: 2px solid black;
     padding: 1rem;
     cursor: pointer;
     width: 12rem;
-    text-decoration: none;
 }
 
-#CommunityContainer .tabItems a:hover {
+#CommunityContainer .tabItems .tabItem:hover {
     color: gray;
 }
 

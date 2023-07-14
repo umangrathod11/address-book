@@ -30,7 +30,7 @@ export const MemberForm = () => {
             }
         communityActions.addMember(record);
         alert('Record added successfully');
-        // communityActions.changeTab(TAB_IDS.VIEW_MEMBERS)
+        communityActions.changeTab(TAB_IDS.VIEW_MEMBERS)
     }
 
     return (

@@ -115,6 +115,7 @@ export const getInitialAppState = () => {
     const initialState = {
         form: getInitialFormValues(),
         records: DummyRecords,
+        tabId: TAB_IDS.VIEW_MEMBERS,
     };
     localStorage.setItem('community', JSON.stringify(initialState));
     return (initialState);
@@ -124,6 +125,7 @@ export const ACTION_TYPES = {
     'ADD_RECORD': 'ADD_RECORD',
     'DELETE_RECORD': 'DELETE_RECORD',
     'PIN_RECORD': 'PIN_RECORD',
+    'CHANGE_CURRENT_TAB': 'CHANGE_CURRENT_TAB',
 };
 
 export const reducerFn = (state, action) => {
@@ -143,6 +145,14 @@ export const reducerFn = (state, action) => {
                 records: state.records.filter(obj => obj.id !== action.payload),
             };
             break;
+        
+        case ACTION_TYPES.CHANGE_CURRENT_TAB:
+            newState = {
+                ...state,
+                tabId: action.payload,
+            }
+            break;
+
         default:
             break;
     }
