@@ -75,7 +75,7 @@ app.post('/users', (req, res) => {
        return;
      }
 
-     res.status(201).send('User created');
+     res.json(newUser);
    });
  });
 });
@@ -83,6 +83,7 @@ app.post('/users', (req, res) => {
 app.put('/users/:id', (req, res) => {
  const userId = req.params.id;
  const updatedUser = req.body;
+ updatedUser.id = userId;
 
  // Read users from JSON file
  fs.readFile('src/jsonData/users.json', 'utf8', (err, data) => {
@@ -100,8 +101,9 @@ app.put('/users/:id', (req, res) => {
      return;
    }
 
+   const userToReplace = { ...users[userIndex], ...updatedUser };
    // Update the user
-   users[userIndex] = { ...users[userIndex], ...updatedUser };
+   users[userIndex] = { ...users[userIndex], ...userToReplace };
 
    // Write updated users to JSON file
    fs.writeFile('src/jsonData/users.json', JSON.stringify(users), (err) => {
@@ -111,7 +113,7 @@ app.put('/users/:id', (req, res) => {
        return;
      }
 
-     res.send('User updated');
+     res.json(userToReplace);
    });
  });
 });
@@ -135,6 +137,7 @@ app.delete('/users/:id', (req, res) => {
      return;
    }
 
+   const userToBeDeleted = users[userIndex];
    // Remove the user
    users.splice(userIndex, 1);
 
@@ -146,7 +149,7 @@ app.delete('/users/:id', (req, res) => {
        return;
      }
 
-     res.send('User deleted');
+     res.json(userToBeDeleted);
    });
  });
 });
