@@ -4,8 +4,7 @@ import "./styles.css";
 import { getInitialAppState, reducerFn } from './context/reducer';
 import { CommunityContext } from './context/context';
 import { getCommunityActions } from './context/communityActions';
-import Timer from './components/Timer';
-import { People } from './components/UseEffectDemo';
+import { Timer, People } from './components/UseEffectDemo';
 
 export default function App() {
   const [myState, dispatch] = React.useReducer(reducerFn, getInitialAppState());
