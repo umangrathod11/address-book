@@ -1,38 +1,28 @@
-import React, { useContext } from 'react';
-import { TABS, TAB_IDS } from '../../constants/general';
-import { MemberForm, MembersList, EducationReport, GeoGraphyReport, VolunteerReport } from './TabComponents';
-import { CommunityContext } from '../../context/context';
+import React from 'react';
+import { Link, Routes, Route } from 'react-router-dom';
+import { EducationReport, GeoGraphyReport, VolunteerReport, Landing, MembersLanding } from './TabComponents';
 import './style.css';
+import { TABS, TAB_IDS } from '../../constants/general';
+import NotFound from '../../components/NotFound';
 
-const TAB_ID_WISE_COMPONENTS = {
-    [TAB_IDS.ADD_MEMBER]: MemberForm,
-    [TAB_IDS.EDUCATION_REPORT]: EducationReport,
-    [TAB_IDS.GEO_GRAPHY_REPORT]: GeoGraphyReport,
-    [TAB_IDS.VOLUNTEER_REPORT]: VolunteerReport,
-    [TAB_IDS.VIEW_MEMBERS]: MembersList,
-};
 
 export const Community = () => {
-    const { state, communityActions } = useContext(CommunityContext);
-    const { tabId } = state;
-    const ComponentToRender = TAB_ID_WISE_COMPONENTS[tabId];
-
     return (
         <div id="CommunityContainer">
             <div className="tabItems">
-                {TABS.map(({ id, text }) => {
-                    return (
-                        <div
-                            onClick={(e) => communityActions.changeTab(id)}
-                            key={id}
-                            className={`tabItem ${tabId === id ? 'activeItab' : ''}`}
-                        >
-                            {text}
-                        </div>);
-                })}
+                {TABS.map(({ id, text }) => <Link to={`/${id}`}>{text}</Link>)}
             </div>
             <div className="tabComponent">
-                <ComponentToRender />
+                <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path={`/${TAB_IDS.MEMBERS}/*`} element={<MembersLanding />} />
+
+
+                    <Route path={`/${TAB_IDS.EDUCATION_REPORT}`} element={<EducationReport />} />
+                    <Route path={`/${TAB_IDS.GEO_GRAPHY_REPORT}`} element={<GeoGraphyReport />} />
+                    <Route path={`/${TAB_IDS.VOLUNTEER_REPORT}`} element={<VolunteerReport />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
             </div>
         </div>
     )
