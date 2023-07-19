@@ -12,3 +12,4 @@ root.render(
     <App />
   </StrictMode>
 );
+console.log("hi");
