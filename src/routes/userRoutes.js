@@ -58,7 +58,7 @@ router.post('/', (req, res) => {
         users.push(newUser);
 
         // Write updated users to JSON file
-        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users), (err) => {
+        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
             if (err) {
                 console.error(err);
                 res.status(500).send({ message: 'Internal Server Error' });
@@ -96,7 +96,7 @@ router.put('/:id', (req, res) => {
         users[userIndex] = { ...users[userIndex], ...userToReplace };
 
         // Write updated users to JSON file
-        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users), (err) => {
+        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
             if (err) {
                 console.error(err);
                 res.status(500).send({ message: 'Internal Server Error' });
@@ -132,7 +132,7 @@ router.delete('/:id', (req, res) => {
         users.splice(userIndex, 1);
 
         // Write updated users to JSON file
-        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users), (err) => {
+        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
             if (err) {
                 console.error(err);
                 res.status(500).send({ message: 'Internal Server Error' });

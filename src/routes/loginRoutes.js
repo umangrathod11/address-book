@@ -42,7 +42,7 @@ router.post('/v1', (req, res) => {
     user.token = loginToken;
 
     // Write token in the login data
-    fs.writeFile(LOGIN_FILE_PATH, JSON.stringify(users), (err) => {
+    fs.writeFile(LOGIN_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
       if (err) {
         console.error(err);
         res.status(500).send({ message: 'Internal Server Error' });
