@@ -6,7 +6,6 @@ const { USERS_FILE_PATH } = require('../constants/general');
 
 
 router.get('/', (req, res) => {
-    console.log('In side , /users');
     // Read users from JSON file
     fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
         if (err) {

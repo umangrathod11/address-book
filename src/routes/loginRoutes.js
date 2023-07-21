@@ -2,14 +2,16 @@ const express = require('express');
 const router = express.Router();
 const uuidv4 = require("uuid");
 const fs = require('fs');
+const SHA256 = require("crypto-js/sha256");
+const _ = require("lodash");
 const { LOGIN_FILE_PATH } = require('../constants/general');
 
-/* use proper hashing algo in future */
-const getHashedPassword = (plainPassword) => plainPassword;
+const getHashedPassword = (plainPassword) => SHA256(plainPassword).toString();
 const generateLoginToken = (phoneNumber) => {
   const p1 = `${Math.random() * phoneNumber}`.replace(".", "");
   const p2 = `${Math.random() * phoneNumber}`.replace(".", "");
-  return `${p1}_${uuidv4.v4()}_${p2}`;
+  const batakaa = [p1, ...uuidv4.v4().split("-"), p2, ...uuidv4.v4().split("-")];
+  return _.shuffle(batakaa).join("-");
 };
 
 router.post('/v1', (req, res) => {
@@ -30,6 +32,7 @@ router.post('/v1', (req, res) => {
     }
 
     const hashedPassword = getHashedPassword(password);
+  
     if (user.hashedPassword !== hashedPassword) {
       res.status(400).send({ message: 'Invalid id or password' });
       return;

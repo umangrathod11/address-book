@@ -1,14 +1,1 @@
-[
-    {
-        "phoneNumber": "9000000000",
-        "isActive": true,
-        "hashedPassword": "593a6d58f34eb5c3de4f47e38d1faaa7d389fafe332a85400b1e54498391c579",
-        "token": "5218152393373606_7bbf2fb4-71ac-4be7-9396-e9d6401c62e6_4465775016345397"
-    },
-    {
-        "phoneNumber": "9000000001",
-        "isActive": false,
-        "hashedPassword": "5d1ce093d11f093703a4eb9903c720a1b97b838c0ae4fcef561d6edc243d5b45",
-        "token": "...."
-    }
-]
+[{"phoneNumber":"9000000000","isActive":true,"hashedPassword":"593a6d58f34eb5c3de4f47e38d1faaa7d389fafe332a85400b1e54498391c579","token":"3c1b-31a3a71e-beb9-7e0c5e9848ca-4699-8449535675710614-45b3-b71f-5320622743141638-6a66-0ac58da9-1c2c229bab6d"},{"phoneNumber":"9000000001","isActive":false,"hashedPassword":"5d1ce093d11f093703a4eb9903c720a1b97b838c0ae4fcef561d6edc243d5b45","token":"...."}]
