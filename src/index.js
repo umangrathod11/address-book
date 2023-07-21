@@ -11,8 +11,7 @@ app.use(cors())
 
 // Start the server
 app.listen(port, () => {
- console.log(`Server listening on port ${port}`);
- console.log({ loginRoutes, userRoutes })
+ console.log(`Server listening on port ${port} at ${new Date().toString()}`);
 });
 
 app.use("/login", loginRoutes);
