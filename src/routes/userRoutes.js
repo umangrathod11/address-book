@@ -5,7 +5,7 @@ const fs = require('fs');
 const { USERS_FILE_PATH } = require('../constants/general');
 
 
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
     console.log('In side , /users');
     // Read users from JSON file
     fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
@@ -20,7 +20,7 @@ router.get('/users', (req, res) => {
     });
 });
 
-router.get('/users/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     const userId = req.params.id;
 
     // Read users from JSON file
@@ -43,7 +43,7 @@ router.get('/users/:id', (req, res) => {
     });
 });
 
-router.post('/users', (req, res) => {
+router.post('/', (req, res) => {
     const newUser = req.body;
 
     // Read users from JSON file
@@ -71,7 +71,7 @@ router.post('/users', (req, res) => {
     });
 });
 
-router.put('/users/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     const userId = req.params.id;
     const updatedUser = req.body;
     updatedUser.id = userId;
@@ -109,7 +109,7 @@ router.put('/users/:id', (req, res) => {
     });
 });
 
-router.delete('/users/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const userId = req.params.id;
 
     // Read users from JSON file

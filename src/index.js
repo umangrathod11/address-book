@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { loginRoutes, userRoutes } = require("./routes");
+const { loginRoutes, userRoutes, reportsRoutes } = require("./routes");
 
 const app = express();
 const port = 3000;
@@ -16,3 +16,4 @@ app.listen(port, () => {
 
 app.use("/login", loginRoutes);
 app.use("/users", userRoutes);
+app.use("/reports", reportsRoutes);
