@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const uuidv4 = require("uuid");
-const fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 const _ = require("lodash");
 const { LOGIN_FILE_PATH } = require('../constants/general');
+const { readDataFromFile, writeDataToFile } = require('../model/files');
 
 const getHashedPassword = (plainPassword) => SHA256(plainPassword).toString();
 const generateLoginToken = (phoneNumber) => {
@@ -14,45 +14,29 @@ const generateLoginToken = (phoneNumber) => {
   return _.shuffle(batakaa).join("-");
 };
 
-router.post('/v1', (req, res) => {
+router.post('/v1', async (req, res) => {
   const { phoneNumber, password } = req.body;
-  fs.readFile(LOGIN_FILE_PATH, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send({ message: 'Internal Server Error' });
-      return;
-    }
 
-    const users = JSON.parse(data);
+  try {
+    let users = await readDataFromFile(LOGIN_FILE_PATH);
     const user = users.find((u) => u.phoneNumber === phoneNumber);
-
     if (!user) {
       res.status(400).send({ message: 'Invalid id or password' });
       return;
     }
-
     const hashedPassword = getHashedPassword(password);
-  
     if (user.hashedPassword !== hashedPassword) {
       res.status(400).send({ message: 'Invalid id or password' });
       return;
     }
-
     const loginToken = generateLoginToken(phoneNumber);
     user.token = loginToken;
-
-    // Write token in the login data
-    fs.writeFile(LOGIN_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send({ message: 'Internal Server Error' });
-        return;
-      }
-      res.json({ loginToken, phoneNumber });
-    });
-  });
-
-
+    await writeDataToFile(LOGIN_FILE_PATH, users);
+    res.json({ loginToken, phoneNumber });
+} catch (error) {
+    res.status(500).send({ message: 'Internal Server Error' });
+    return;
+}
 });
 
 

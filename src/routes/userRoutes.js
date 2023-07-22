@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const uuidv4 = require("uuid");
-const fs = require('fs');
 const { USERS_FILE_PATH } = require('../constants/general');
 const { readDataFromFile, writeDataToFile } = require('../model/files');
 
