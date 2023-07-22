@@ -3,7 +3,7 @@ const router = express.Router();
 const uuidv4 = require("uuid");
 const SHA256 = require("crypto-js/sha256");
 const _ = require("lodash");
-const { LOGIN_FILE_PATH } = require('../constants/general');
+const { LOGIN_FILE_PATH, COOKIES_NAME } = require('../constants/general');
 const { readDataFromFile, writeDataToFile } = require('../model/files');
 
 const getHashedPassword = (plainPassword) => SHA256(plainPassword).toString();
@@ -31,6 +31,8 @@ router.post('/v1', async (req, res) => {
     }
     const loginToken = generateLoginToken(phoneNumber);
     user.token = loginToken;
+    res.cookie(COOKIES_NAME.PHONE, phoneNumber);
+    res.cookie(COOKIES_NAME.TOKEN, loginToken);
     await writeDataToFile(LOGIN_FILE_PATH, users);
     res.json({ loginToken, phoneNumber });
 } catch (error) {
