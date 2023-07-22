@@ -3,6 +3,8 @@ import "./styles.css";
 import { getInitialAppState, reducerFn } from './context/reducer';
 import { CommunityContext } from './context/context';
 import { getCommunityActions } from './context/communityActions';
+import { AUTH_HEADER_NAMES } from './constants/general';
+import { getAuthHeaders, setAuthHeaders } from './helpers/auth';
 
 export default function App() {
   const [myState, dispatch] = React.useReducer(reducerFn, getInitialAppState());
@@ -30,12 +32,19 @@ export default function App() {
 
     fetch(`http://localhost:3000/login/v1`, requestOptions)
       .then(response => response.json())
-      .then(r => console.log('login response ', r))
+      .then(r => {
+        console.log('login response ', r);
+        setAuthHeaders(r.phoneNumber, r.loginToken);
+      })
       .catch(error => console.log('error', error));
   };
 
   const doFetchUsers = () => {
-    fetch("http://localhost:3000/users")
+    fetch("http://localhost:3000/users", {
+      headers: {
+        ...getAuthHeaders(),
+      }
+    })
       .then(res => res.json())
       .then(res => {
         console.log('all users are  ', res);
