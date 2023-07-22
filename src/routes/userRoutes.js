@@ -1,147 +1,92 @@
 const express = require('express');
 const router = express.Router();
 const uuidv4 = require("uuid");
-const fs = require('fs');
 const { USERS_FILE_PATH } = require('../constants/general');
+const { readDataFromFile, writeDataToFile } = require('../model/files');
 
 
-router.get('/', (req, res) => {
-    // Read users from JSON file
-    fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send({ message: 'Internal Server Error' });
-            return;
-        }
 
-        const users = JSON.parse(data);
+router.get('/', async (req, res) => {
+    try {
+        const users = await readDataFromFile(USERS_FILE_PATH);
         res.json(users);
-    });
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
+        return;
+    }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     const userId = req.params.id;
-
-    // Read users from JSON file
-    fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send({ message: 'Internal Server Error' });
-            return;
-        }
-
-        const users = JSON.parse(data);
+    try {
+        const users = await readDataFromFile(USERS_FILE_PATH);
         const user = users.find((u) => u.id === userId);
-
         if (!user) {
             res.status(404).send('User not found');
             return;
         }
-
         res.json(user);
-    });
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
+        return;
+    }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const newUser = req.body;
-
-    // Read users from JSON file
-    fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send({ message: 'Internal Server Error' });
-            return;
-        }
-
-        newUser.id = generateId('user_');
-        const users = JSON.parse(data);
-        users.push(newUser);
-
-        // Write updated users to JSON file
-        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send({ message: 'Internal Server Error' });
-                return;
-            }
-
-            res.json(newUser);
-        });
-    });
+    newUser.id = generateId('user_');
+    try {
+        let users = await readDataFromFile(USERS_FILE_PATH);
+        users = [newUser, ...users];
+        await writeDataToFile(USERS_FILE_PATH, users);
+        res.json(newUser);
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
+        return;
+    }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
     const userId = req.params.id;
     const updatedUser = req.body;
     updatedUser.id = userId;
 
-    // Read users from JSON file
-    fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send({ message: 'Internal Server Error' });
-            return;
-        }
-
-        let users = JSON.parse(data);
+    try {
+        let users = await readDataFromFile(USERS_FILE_PATH);
         const userIndex = users.findIndex((u) => u.id === userId);
-
         if (userIndex === -1) {
             res.status(404).send('User not found');
             return;
         }
-
         const userToReplace = { ...users[userIndex], ...updatedUser };
         // Update the user
-        users[userIndex] = { ...users[userIndex], ...userToReplace };
-
-        // Write updated users to JSON file
-        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send({ message: 'Internal Server Error' });
-                return;
-            }
-
-            res.json(userToReplace);
-        });
-    });
+        users[userIndex] = userToReplace;
+        await writeDataToFile(USERS_FILE_PATH, users);
+        res.json(userToReplace);
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
+        return;
+    }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     const userId = req.params.id;
-
-    // Read users from JSON file
-    fs.readFile(USERS_FILE_PATH, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send({ message: 'Internal Server Error' });
-            return;
-        }
-
-        let users = JSON.parse(data);
+    try {
+        const users = await readDataFromFile(USERS_FILE_PATH);
         const userIndex = users.findIndex((u) => u.id === userId);
-
         if (userIndex === -1) {
             res.status(404).send('User not found');
             return;
-        }
-
+        } 
         const userToBeDeleted = users[userIndex];
         // Remove the user
         users.splice(userIndex, 1);
-
-        // Write updated users to JSON file
-        fs.writeFile(USERS_FILE_PATH, JSON.stringify(users, "", 2), (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send({ message: 'Internal Server Error' });
-                return;
-            }
-
-            res.json(userToBeDeleted);
-        });
-    });
+        await writeDataToFile(USERS_FILE_PATH, users);
+        res.json(userToBeDeleted);
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
+        return;
+    }
 });
 
 
