@@ -16,7 +16,7 @@ const generateLoginToken = (phoneNumber) => {
 
 router.post('/v1', async (req, res) => {
   const { phoneNumber, password } = req.body;
-
+  console.log('credentials in login/v1 ', { phoneNumber, password });
   try {
     let users = await readDataFromFile(LOGIN_FILE_PATH);
     const user = users.find((u) => u.phoneNumber === phoneNumber);
@@ -26,7 +26,7 @@ router.post('/v1', async (req, res) => {
     }
     const hashedPassword = getHashedPassword(password);
     if (user.hashedPassword !== hashedPassword) {
-      res.status(400).send({ message: 'Invalid id or password' });
+      res.status(400).send({ message: 'Invalid password' });
       return;
     }
     const loginToken = generateLoginToken(phoneNumber);

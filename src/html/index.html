@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input,
+        button {
+            padding: 0.5rem;
+        }
+
+        button {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <input placeholder="enter user id" type="text" name="phonenumber" id="txtPn">
+        <br />
+        <input placeholder="enter password" type="text" name="phonenumber" id="txtPass">
+        <br />
+        <input type="button" id="btnLogin" value="Login">
+
+        <br />
+        <br />
+        <br />
+        <button id="btnFetchUsers">Click Here Fetch Users</button>
+        <br />
+        <div id="dumpYard"></div>
+    </div>
+
+    <script>
+        txtPass.value = "9000000000";
+        txtPn.value = "9000000000";
+        btnLogin.onclick = async (e) => {
+            e.preventDefault();
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "phoneNumber": txtPn.value,
+                "password": txtPass.value
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:3000/login/v1", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+            alert('jii');
+        };
+
+        btnFetchUsers.onclick = () => {
+            fetch("http://localhost:3000/users")
+                .then(res => res.json())
+                .then(res => {
+                    console.log('res ----> ', res);
+                })
+                .catch(e => {
+                    console.log('Something went wrong', e);
+                })
+        }
+    </script>
+</body>
+
+</html>
