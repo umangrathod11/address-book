@@ -28,20 +28,12 @@ app.use((req, res, next) => {
 
 const authenticateReq = async (req, res, next) => {
     const { originalUrl } = req;
-    console.log('originalUrl in authenticateReq :- ', originalUrl);
-    console.log('req cookies : ', req.cookies);
-    const ckToken = req.cookies[COOKIES_NAME.TOKEN];
-    const ckuserPn = req.cookies[COOKIES_NAME.PHONE];
-    console.log({
-        ckToken,
-        ckuserPn,
-        t: typeof ckuserPn,
-    });
+    /* why we need to rely on headers ? bcz be and fe are on different domains */
+    const ckToken = req.cookies[COOKIES_NAME.TOKEN] || req.headers[COOKIES_NAME.TOKEN];
+    const ckuserPn = req.cookies[COOKIES_NAME.PHONE] || req.headers[COOKIES_NAME.PHONE];
     try {
         const loginUsers = await readDataFromFile(LOGIN_FILE_PATH);
-        console.log(loginUsers);
         const index = loginUsers.findIndex(u => u.phoneNumber === ckuserPn && u.token === ckToken);
-        console.log('index ', index);
         if (index === -1) {
             res.status(403).send({ message: 'Unauthorized request' });
             return;
