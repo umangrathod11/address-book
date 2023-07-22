@@ -9,6 +9,46 @@ Execute following command to run the server on your local.
 
 Here are the curl requests
 
+```
+curl --location --request POST 'localhost:3000/login/v1' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "phoneNumber": "9000000000",
+    "password": "9000000000"
+}'
+Response
+{
+    "loginToken": "8e99-e344c4d8-1b3d-2b0bddc74c84-8c1e307f97d6-4388-14066795518165964-b484-408c-5ed566f9-133e-8803527227295433",
+    "phoneNumber": "9000000000"
+}
+```
+
+Send the loginToken and phoneNumber value in the rest the APIs. Sample
+```
+fetch("http://localhost:3000/users", {
+  "headers": {
+    "x-auth-phone": "9000000000",
+    "x-auth-token": "8e99-e344c4d8-1b3d-2b0bddc74c84-8c1e307f97d6-4388-14066795518165964-b484-408c-5ed566f9-133e-8803527227295433"
+  },
+  "method": "GET",
+});
+
+
+curl 'http://localhost:3000/users' \
+  -H 'x-auth-phone: 9000000000' \
+  -H 'x-auth-token: 8e99-e344c4d8-1b3d-2b0bddc74c84-8c1e307f97d6-4388-14066795518165964-b484-408c-5ed566f9-133e-8803527227295433' \
+  --compressed
+```
+
+If you will not pass these headers then following error will be thrown by backend
+```
+{"message":"Unauthorized request"}
+```
+
+
+
+Now in the following examples, I have not mentioned about these 2 headers, but u need to pass them.. Soon I will update them.
+
 
 ```
 Create user.
