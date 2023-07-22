@@ -20,6 +20,10 @@ router.post('/v1', async (req, res) => {
   try {
     let users = await readDataFromFile(LOGIN_FILE_PATH);
     const user = users.find((u) => u.phoneNumber === phoneNumber);
+    if (user.isActive === false) {
+      res.status(400).send({ message: 'User is deactivated. Please contact admin.' });
+      return;
+    }
     if (!user) {
       res.status(400).send({ message: 'Invalid id or password' });
       return;
@@ -34,8 +38,11 @@ router.post('/v1', async (req, res) => {
     res.cookie(COOKIES_NAME.PHONE, phoneNumber);
     res.cookie(COOKIES_NAME.TOKEN, loginToken);
     await writeDataToFile(LOGIN_FILE_PATH, users);
+    console.log('------------> ', { loginToken, phoneNumber });
     res.json({ loginToken, phoneNumber });
+    return;
 } catch (error) {
+  console.log('Error -> ', error);
     res.status(500).send({ message: 'Internal Server Error' });
     return;
 }
