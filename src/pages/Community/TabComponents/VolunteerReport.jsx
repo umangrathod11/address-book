@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { INTEREST_CONTRIBUTION, INTEREST_TO_TEXT } from '../../../constants/general';
 import { getPersonNameLabel } from '../helper';
-import { CommunityContext } from '../../../context/context';
+
 
 export const VolunteerReport = () => {
-    const { state } = useContext(CommunityContext);
-    const { records } = state;
+    
+    const records = [];
     const groupedData = {};
 
     INTEREST_CONTRIBUTION.map(obj => obj.value).forEach(interest => {

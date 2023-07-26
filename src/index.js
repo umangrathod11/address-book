@@ -15,4 +15,3 @@ root.render(
     </BrowserRouter>
   </StrictMode>
 );
-console.log("hi");

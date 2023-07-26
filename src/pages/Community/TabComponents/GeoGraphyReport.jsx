@@ -1,11 +1,8 @@
 import React, { useContext } from 'react';
 import { getPersonNameLabel } from '../helper';
-import { CommunityContext } from '../../../context/context';
 
 export const GeoGraphyReport = () => {
-    const { state } = useContext(CommunityContext);
-    const { records } = state;
-
+    const records = [];
     const groupedData = {};
     records.forEach((obj) => {
         groupedData[obj.city] = groupedData[obj.city] || [];

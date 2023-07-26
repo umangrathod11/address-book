@@ -1,20 +1,36 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { CommunityContext } from '../../../context/context';
+import { getAuthHeaders } from '../../../helpers/auth';
 
 export const MemberDetails = () => {
+    const [person, setPerson] = useState({})
     const { memberId } = useParams();
 
-    const { state: { records } } = useContext(CommunityContext);
-    const person = records.filter(p => p.id === memberId)[0];
+    const doFetchUserById = (id) => {
+        fetch(`https://t1m-addressbook-service.onrender.com/users/${id}`, {
+            headers: {
+            ...getAuthHeaders(),
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            console.log('person is  ', res);
+            setPerson(res);
+        })
+        .catch(e => {
+            console.log('Something went wrong', e);
+        })
+    }
+
+    React.useEffect(() => {
+        doFetchUserById(memberId)
+    }, [memberId]);
+    
+    console.log('person ', person)
     return (
         <div>
             <h3>Viewing Details of member id - {memberId}</h3>
-            {person ?
-                <div>Person Name - {person.name}</div>
-            :
-                <div>Record not found with this id.</div>
-            }
+            {JSON.stringify(person, "", 2)}
         </div>
 
     )

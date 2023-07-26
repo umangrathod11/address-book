@@ -1,17 +1,40 @@
-import React, { useContext } from 'react';
-import { EDU_TO_TEXT, INTEREST_TO_TEXT } from '../../../constants/general';
+import React, { useRef, useState } from 'react';
 import { Button } from '../../../components/Button/button';
-import { CommunityContext } from '../../../context/context';
 import { useNavigate } from 'react-router-dom';
 import { getMemberDetailsRoute } from '../helper';
+import { getAuthHeaders } from '../../../helpers/auth';
 
 export const MembersList = () => {
-    const { state: { records }, communityActions } = useContext(CommunityContext);
+    const [records, setRecords] = useState([]);
+    const fetchRef = useRef(true);
     const navigate = useNavigate();
-
-    console.log('records ', records);
+    const doFetchUsers = () => {
+        setRecords([]);
+        fetch("https://t1m-addressbook-service.onrender.com/users", {
+          headers: {
+            ...getAuthHeaders(),
+          }
+        })
+          .then(res => res.json())
+          .then(res => {
+            console.log('all users are  ', res);
+            setRecords(res);
+          })
+          .catch(e => {
+            console.log('Something went wrong', e);
+          })
+      }
+    React.useEffect(() => {
+        /* in dev env, effect runs twice.. preventing it to once using ref */
+        if (fetchRef.current) {
+            doFetchUsers();
+            fetchRef.current = false;
+        }
+    }, []);
+    
     return (
         <div id="viewMembers">
+            <button onClick={doFetchUsers}>Refresh</button>
             <table>
                 <thead>
                     <tr>
@@ -19,26 +42,28 @@ export const MembersList = () => {
                         <td>Name</td>
                         <td>Phone</td>
                         <td>City</td>
-                        <td>Education</td>
-                        <td>Interests</td>
+                        <td>Email</td>
+                        {/* <td>Education</td> */}
+                        {/* <td>Interests</td> */}
                         <td>Actions</td>
                     </tr>
                 </thead>
                 <tbody>
                 {
-                    records.map( ({ id, name, phone, city, education, interests }, index) => {
+                    records.map( ({ id, name, phoneNumber, city, email }, index) => {
                         return (
                             <tr key={id}>
                                 <td>{index + 1}</td>
                                 <td>{name}</td>
-                                <td>{phone}</td>
+                                <td><PhoneNumbers numbers={phoneNumber} /></td>
                                 <td>{city}</td>
-                                <td>{EDU_TO_TEXT[education]}</td>
-                                <td>
+                                <td>{email}</td>
+                                {/* <td>{EDU_TO_TEXT[education]}</td> */}
+                                {/* <td>
                                     {
                                         interests.map((interestId) => <div className="interestItem" key={interestId}>{INTEREST_TO_TEXT[interestId]}</div> )
                                     }
-                                </td>
+                                </td> */}
                                 <td>
                                     <Button
                                         variant="normal"
@@ -47,7 +72,7 @@ export const MembersList = () => {
                                         View
                                     </Button>
                                     <Button variant="danger" onClick={(e) => {
-                                        communityActions.deleteMember(id);
+                                        alert('commin soon')
                                     }}>Delete</Button>
                                 </td>
                             </tr>
@@ -57,11 +82,14 @@ export const MembersList = () => {
                 </tbody>
                 
             </table>
-        </div>
-        
+        </div>  
     );
-
-   
 }
 
+const PhoneNumbers = ({ numbers }) => {
+    if (Array.isArray(numbers)) {
+        return numbers.map(num => <div key={num}>{num}</div>)
+    }
+    return '-';
+}
 MembersList.propTypes = {} // add entry for records here
