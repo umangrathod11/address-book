@@ -1,15 +1,19 @@
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { TAB_IDS } from "../../constants/general";
-import { setAuthHeaders } from "../../helpers/auth";
+import { getIsLoggedInFlag, setAuthHeaders } from "../../helpers/auth";
 
 export const Login = () => {  
     const idRef = useRef(null);
     const passRef = useRef(null);
     const navigate = useNavigate();
+    const isLoggedIn = getIsLoggedInFlag();
 
     // Todo - If already logged in - then redirect to /members
     // dont show login page.
+    if (isLoggedIn) {
+      return <Navigate to={`/${TAB_IDS.MEMBERS}`}/>
+    }
 
     const doLogin = () => {
       var raw = JSON.stringify({
@@ -30,7 +34,8 @@ export const Login = () => {
         .then(r => {
           console.log('login response ', r);
           setAuthHeaders(r.phoneNumber, r.loginToken);
-          navigate(`/${TAB_IDS.MEMBERS}`)
+          navigate(`/${TAB_IDS.MEMBERS}`);
+          window.location.reload(); // This is hack.. need to do bcz there is no centralised state.. Fix this
         })
         .catch(error => {
             // handle error by your self

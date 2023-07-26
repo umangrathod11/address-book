@@ -9,3 +9,7 @@ export const setAuthHeaders = (phoneNumber, loginToken) => {
     localStorage.setItem(AUTH_HEADER_NAMES.PHONE, phoneNumber),
     localStorage.setItem(AUTH_HEADER_NAMES.TOKEN, loginToken)
 };
+
+export const getIsLoggedInFlag = () => {
+    return Boolean(localStorage.getItem(AUTH_HEADER_NAMES.PHONE));
+}

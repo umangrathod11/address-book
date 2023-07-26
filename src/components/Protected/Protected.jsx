@@ -1,14 +1,9 @@
-import { getAuthHeaders } from '../../helpers/auth';
-import { AUTH_HEADER_NAMES } from '../../constants/general';
-import { useNavigate } from 'react-router-dom';
+import { getIsLoggedInFlag } from '../../helpers/auth';
+import { Navigate } from 'react-router-dom';
 
 export const Protected = (props) => {
-    const navigate = useNavigate();
-    const authData = getAuthHeaders();
-    if ( !authData[AUTH_HEADER_NAMES.TOKEN] ) {
-        navigate('/login');
-        return;
-    } else {
-        return props.children;
-    }
+    const isLoggedIn = getIsLoggedInFlag();
+    const pathname = window.location.pathname;
+    console.log('path name ', pathname);
+    return isLoggedIn ? props.children : <Navigate to="/login" replace={true} />
 }

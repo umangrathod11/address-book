@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '../../../components/Button/button';
 import { useNavigate } from 'react-router-dom';
 import { getMemberDetailsRoute } from '../helper';
@@ -6,6 +6,7 @@ import { getAuthHeaders } from '../../../helpers/auth';
 
 export const MembersList = () => {
     const [records, setRecords] = useState([]);
+    const fetchRef = useRef(true);
     const navigate = useNavigate();
     const doFetchUsers = () => {
         setRecords([]);
@@ -24,7 +25,11 @@ export const MembersList = () => {
           })
       }
     React.useEffect(() => {
-        doFetchUsers();
+        /* in dev env, effect runs twice.. preventing it to once using ref */
+        if (fetchRef.current) {
+            doFetchUsers();
+            fetchRef.current = false;
+        }
     }, []);
     
     return (
