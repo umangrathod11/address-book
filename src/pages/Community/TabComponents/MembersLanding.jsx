@@ -2,17 +2,25 @@ import React from 'react';
 import { MemberDetails } from './MemberDetails';
 import { MemberForm } from './MemberForm';
 import { MembersList } from './MembersList';
-import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import { TAB_IDS } from '../../../constants/general';
+import { Protected } from '../../../components/Protected/Protected';
 
 export const MembersLanding = () => {
     return (
         <>
             <Routes>
-                <Route index element={<MembersList />} />
-                <Route path=":memberId" element={<MemberDetails />} />
-                <Route path="add" element={<MemberForm />} />
-                <Route path="*" element={<InvalidMembersPath />} />
+                <Route index element={
+                    <Protected>
+                        <MembersList />
+                    </Protected>} />
+                <Route path=":memberId" element={<Protected><MemberDetails /></Protected>} />
+                <Route path="add" element={
+                    <Protected>
+                        <MemberForm />
+                    </Protected>
+                } />
+                <Route path="*" element={<Protected><InvalidMembersPath /></Protected>} />
             </Routes>
         </>
     )

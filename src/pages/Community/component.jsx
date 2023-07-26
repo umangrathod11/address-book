@@ -4,6 +4,7 @@ import { EducationReport, GeoGraphyReport, VolunteerReport, Landing, MembersLand
 import './style.css';
 import { TABS, TAB_IDS } from '../../constants/general';
 import NotFound from '../../components/NotFound';
+import { Protected } from '../../components/Protected/Protected';
 
 
 export const Community = () => {
@@ -14,13 +15,33 @@ export const Community = () => {
             </div>
             <div className="tabComponent">
                 <Routes>
-                    <Route path="/" element={<Landing />} />
-                    <Route path={`/${TAB_IDS.MEMBERS}/*`} element={<MembersLanding />} />
+                    <Route path="/" element={
+                        <Protected>
+                            <Landing />
+                        </Protected>
+                    } />
+                    <Route path={`/${TAB_IDS.MEMBERS}/*`} element={
+                        <Protected>
+                            <MembersLanding />
+                        </Protected>
+                    }/>
 
 
-                    <Route path={`/${TAB_IDS.EDUCATION_REPORT}`} element={<EducationReport />} />
-                    <Route path={`/${TAB_IDS.GEO_GRAPHY_REPORT}`} element={<GeoGraphyReport />} />
-                    <Route path={`/${TAB_IDS.VOLUNTEER_REPORT}`} element={<VolunteerReport />} />
+                    <Route path={`/${TAB_IDS.EDUCATION_REPORT}`} element={
+                        <Protected>
+                            <EducationReport />
+                        </Protected>
+                    } />
+                    <Route path={`/${TAB_IDS.GEO_GRAPHY_REPORT}`} element={
+                        <Protected>
+                            <GeoGraphyReport />
+                        </Protected>
+                    } />
+                    <Route path={`/${TAB_IDS.VOLUNTEER_REPORT}`} element={
+                        <Protected>
+                            <VolunteerReport />
+                        </Protected>
+                    } />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>

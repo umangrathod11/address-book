@@ -1,38 +1,59 @@
-import React, { useContext } from 'react';
-import { getInitialFormValues } from '../../../context/reducer';
-import { EDUCATION, INTEREST_CONTRIBUTION, TAB_IDS } from '../../../constants/general';
+import React, { useState } from 'react';
+import { TAB_IDS } from '../../../constants/general';
 import Button from '../../../components/Button';
-import { CommunityContext } from '../../../context/context';
 import { useNavigate } from 'react-router-dom';
+import { getAuthHeaders } from '../../../helpers/auth';
 
 export const MemberForm = () => {
     const navigate = useNavigate();
-    const { communityActions } = useContext(CommunityContext);
-
-    const [record, setRecord] = React.useState(getInitialFormValues());
+    const [record, setRecord] = useState({});
     const {
-        id, name, phone, city, education, isPinned, interests
+        id, name, phone, email, city,
     } = record;
 
-
     const handleSubmit = (e) => {
-        if (!record.id){
-            record.id = crypto.randomUUID();
-        }
         if (    !record.name ||
                 !record.phone ||
                 !record.city ||
-                !record.interests.length ||
-                !record.education
+                !record.email
             ) {
                 alert('Enter all values before submitting');
                 return;
                 /* there are better ways to validate forms, this is just a work around */
             }
-        communityActions.addMember(record);
-        alert('Record added successfully');
-        // navigate(TAB_IDS.MEMBERS); This will navigate to current route + TAB_IDS.MEMBERS
-        navigate(`/${TAB_IDS.MEMBERS}`);
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    ...getAuthHeaders(),
+                },
+                body: JSON.stringify({
+                    name: record.name,
+                    phoneNumber: [record.phone],
+                    email: record.email,
+                    city: record.city,
+                })
+            };
+          
+            fetch(`https://t1m-addressbook-service.onrender.com/users`, requestOptions)
+            .then(r => {
+                console.log(' r in 1st then ', r);
+                if (r.status >= 200 && r.status <= 299) {
+                    return r.json();
+                } else {
+                    throw ('Something went wrong');
+                }
+                
+                
+            })
+            .then(r => {
+                console.log(' r in 2nd then ', r);
+                navigate(`/${TAB_IDS.MEMBERS}`)
+            })
+            .catch(error => {
+                // handle error by your self
+                console.log('error ->> ', error);
+            });
     }
 
     return (
@@ -57,6 +78,13 @@ export const MemberForm = () => {
                 }} value={phone} />
             </div>
 
+            <div className='fieldContainer'>
+                <label>Email</label>
+                <input onChange={(e) => {
+                    setRecord((oldState) => ({ ...oldState, email: e.target.value }));
+                }} value={email} />
+            </div>
+
             {/* City */}
             <div className='fieldContainer'>
                 <label>City</label>
@@ -64,75 +92,12 @@ export const MemberForm = () => {
                     setRecord((oldState) => ({ ...oldState, city: e.target.value }));
                 }} value={city} />
             </div>
-
-            {/* Education */}
-            <div className='fieldContainer'>
-                <label>Education</label>
-                <select value={education} onChange={(e) => {
-                    console.log('Education - ', e.target.value);
-                    setRecord((oldState) => ({ ...oldState, education: e.target.value }));
-                }}>
-                    <option value="">Select the education</option>
-                    {
-                        EDUCATION.map(obj => <option key={obj.value} value={obj.value}>{obj.display}</option>)
-                    }
-                </select>
-            </div>
-
-             {/* Interest */}
-             <div className='fieldContainer'>
-                <label>Interest</label>
-                <div className='checkboxItemsContainer'>
-                    {
-                        INTEREST_CONTRIBUTION.map(obj => {
-                            const checkboxId = `ID_${obj.value}`;
-
-                            return (
-                                <div key={obj.value} className='checkboxItem'>
-                                    <input
-                                        type="checkbox"
-                                        value={obj.value}
-                                        id={checkboxId}
-                                        checked={interests.includes(obj.value)}
-                                        onChange={(e) => {
-                                            /* adding interest */
-                                            if (e.target.checked) {
-                                                setRecord((oldState) => ({
-                                                    ...oldState,
-                                                    interests: [...oldState.interests, obj.value]
-                                                }));
-                                                return;
-                                            }
-
-                                            /* if check box is not checked -
-                                                it means the item was checked before and
-                                                now its unchecked.
-                                                so lets remove it from the state
-                                            */
-                                            
-                                            setRecord((oldState) => ({
-                                                ...oldState,
-                                                interests: oldState.interests.filter(val => val !== obj.value),
-                                            }));
-
-                                        }}
-                                    />
-                                    <label htmlFor={checkboxId}>{obj.display}</label>
-                                    {/* <p>{obj.description}</p> */}
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-            </div>
+           
             <div>
                 <Button type="submit" variant="success" onClick={handleSubmit} >
                     {id ? 'Update' : 'Add'}
                 </Button>
             </div>
-
-
-
         </div>
     )
 }

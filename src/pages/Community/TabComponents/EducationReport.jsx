@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { EDUCATION, EDU_TO_TEXT } from '../../../constants/general';
 import { getPersonNameLabel } from '../helper';
-import { CommunityContext } from '../../../context/context';
 
 export const EducationReport = () => {
-    const { state } = useContext(CommunityContext);
-    const { records } = state;
-
+    
+    const records = []
     const groupedData = {};
     
     EDUCATION.map(obj => obj.value).forEach((level) => groupedData[level] = []);
